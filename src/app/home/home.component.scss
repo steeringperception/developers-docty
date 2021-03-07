@@ -1,0 +1,28 @@
+.container {
+  position: absolute;
+  top: 64px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #eee;
+}
+mat-sidenav {
+  width: 300px;
+  padding: 8px;
+}
+mat-sidenav-content {
+  padding: 8px;
+}
+.tree-invisible {
+  display: none;
+}
+
+.tree ul,
+.tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+span {
+  outline: none;
+}
