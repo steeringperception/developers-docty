@@ -1,15 +1,18 @@
-<mat-toolbar>
-  <button mat-icon-button class="icon">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <span>My App</span>
-  <span class="spacer"></span>
-  <button mat-icon-button class="icon favorite-icon">
-    <mat-icon>favorite</mat-icon>
-  </button>
-  <button mat-icon-button class="icon">
-    <mat-icon>share</mat-icon>
-  </button>
+<mat-toolbar class="app-toolbar ">
+  <mat-toolbar-row class="container">
+    <!-- <button mat-icon-button class="icon">
+      <mat-icon>menu</mat-icon>
+    </button> -->
+    <!-- <span>My App</span> -->
+    <img src="https://doctyai.s3.us-east-2.amazonaws.com/logo.png" height="36">
+    <span class="spacer"></span>
+    <button mat-icon-button class="icon favorite-icon">
+      <mat-icon>favorite</mat-icon>
+    </button>
+    <button mat-icon-button class="icon">
+      <mat-icon>share</mat-icon>
+    </button>
+  </mat-toolbar-row>
 </mat-toolbar>
 
 <router-outlet></router-outlet>

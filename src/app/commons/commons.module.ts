@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { HttpClientModule } from '@angular/common/http';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatCardModule } from '@angular/material/card';
 import { CKEditorModule } from 'ckeditor4-angular';
 
 @NgModule({
@@ -29,7 +30,8 @@ import { CKEditorModule } from 'ckeditor4-angular';
     MatDividerModule,
     HttpClientModule,
     MatChipsModule,
-    CKEditorModule
+    CKEditorModule,
+    MatCardModule
   ],
   providers: [
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },

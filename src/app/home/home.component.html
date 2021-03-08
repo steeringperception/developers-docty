@@ -1,14 +1,26 @@
-<div class="container-">
+<div class="container">
   <mat-sidenav-container>
     <mat-sidenav opened mode="side" [fixedInViewport]="true" [fixedTopGap]="'64'">
-      <div>
-        Api version 1
-      </div>
+      <ul class="navList">
+        <li class="mat-tree-node">
+          <a href="">
+            Prologue
+          </a>
+        </li>
+        <li class="mat-tree-node">
+          <a>
+            <span>Api v1</span>
+            <mat-icon class="icon add" (click)="addFolder({parent:1})"> add
+            </mat-icon>
+          </a>
+        </li>
+      </ul>
+      <mat-divider></mat-divider>
       <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
           <li class="mat-tree-node">
             <button mat-icon-button disabled class="icon"></button>
-            <span [routerLink]="['/','docs',node.apiId]" (click)="add(node)" style="cursor: pointer;">
+            <span [routerLink]="['/',encrypt(node.folderId),node.apiId]" style="cursor: pointer;">
               {{node.title}}
             </span>
           </li>
@@ -22,8 +34,19 @@
                 </mat-icon>
               </button>
               {{node.title}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <mat-icon class="icon" [routerLink]="['/','docs']" style="cursor: pointer;outline: none;"> add
-              </mat-icon>
+              <span>
+                <!-- <mat-icon class="icon add" > add
+                </mat-icon> -->
+                <button mat-button class="icon add" [matMenuTriggerFor]="menu">
+                  <mat-icon class="add"> more_vert
+                  </mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item [routerLink]="['/',encrypt(node.id)]">Add API</button>
+                  <button mat-menu-item (click)="addFolder(node)">Rename</button>
+                  <button mat-menu-item (click)="deleteFolder(node)">Delete</button>
+                </mat-menu>
+              </span>
             </div>
             <ul [class.tree-invisible]="!treeControl.isExpanded(node)">
               <ng-container matTreeNodeOutlet></ng-container>

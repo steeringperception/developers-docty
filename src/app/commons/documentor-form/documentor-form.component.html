@@ -1,95 +1,48 @@
-<div class="box">
-  <form (ngSubmit)="submitForm(f)" #f="ngForm">
-    <div style="display: flex;">
-      <mat-form-field style="width: 100px;">
-        <mat-label>Method</mat-label>
-        <mat-select matInput name="method" [(ngModel)]="form.method" required (selectionChange)="onMethodChange()">
-          <mat-option *ngFor="let method of methodes" [value]="method">
-            {{method | titlecase}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+<form class="box_" (ngSubmit)="submitForm(f)" #f="ngForm">
+  <mat-card>
+    <mat-card-header style="justify-content: space-between;">
+      <mat-card-title>{{form.method | uppercase}}</mat-card-title>
+      <mat-card-subtitle>/{{form.path || 'unknown'}} </mat-card-subtitle>
+      <div *ngIf="!!form.apiId">
+        <button mat-button class="text-info">Preview</button>
+        <button mat-button (click)="deleteApi()" class="text-danger">Delete</button>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div style="display: flex;">
+        <mat-form-field style="width: 100px;">
+          <mat-label>Method</mat-label>
+          <mat-select matInput name="method" [(ngModel)]="form.method" required (selectionChange)="onMethodChange()">
+            <mat-option *ngFor="let method of methodes" [value]="method">
+              {{method | titlecase}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="form-field">
+          <mat-label>End Point</mat-label>
+          <input matInput type="text" name="path" [(ngModel)]="form.path" required>
+          <button mat-button matSuffix mat-icon-button aria-label="Clear" class="icon" *ngIf="!!form.path"
+            (click)="form.path = null">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
       <mat-form-field class="form-field">
-        <mat-label>End Point</mat-label>
-        <input matInput type="text" name="path" [(ngModel)]="form.path" required>
-        <button mat-button matSuffix mat-icon-button aria-label="Clear" class="icon" *ngIf="!!form.path"
-          (click)="form.path = null">
-          <mat-icon>close</mat-icon>
-        </button>
+        <mat-label>Api Description</mat-label>
+        <textarea matInput style="display: none;" [value]="form.description">
+        </textarea>
+        <ckeditor matInput [type]="type" name="description" [(ngModel)]="form.description"></ckeditor>
       </mat-form-field>
-    </div>
-    <mat-form-field class="form-field">
-      <mat-label>Api Description</mat-label>
-      <textarea matInput style="display: none;" [value]="form.description">
-      </textarea>
-      <ckeditor matInput [type]="type" name="description" [(ngModel)]="form.description"></ckeditor>
-    </mat-form-field>
 
-    <ng-container>
+      <ng-container>
 
-      <fieldset *ngIf="showFieldSet=='queryParams';else paramFieldset">
-        <legend [hidden]="!!!form.queryParams?.length">Query Params </legend>
-        <div *ngFor="let d of form.queryParams;let i = index;" class="paramContainer">
-          <div style="display: flex;">
-            <mat-form-field class="form-field">
-              <mat-label>Param</mat-label>
-              <input matInput type="text" name="queryParams_{{i}}" [(ngModel)]="d.param" required>
-              <button mat-button matSuffix mat-icon-button aria-label="Clear" class="icon" *ngIf="d.param"
-                (click)="d.param = null">
-                <mat-icon>close</mat-icon>
-              </button>
-            </mat-form-field>
-            <mat-form-field style="width: 150px;">
-              <mat-label>Representation</mat-label>
-              <mat-select matInput name="queryRepresentation{{i}}" [(ngModel)]="d.representation" required>
-                <mat-option *ngFor="let method of representationTypes" [value]="method">
-                  {{method | titlecase}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <mat-form-field class="form-field" [hidden]="d.representation != 'enum'">
-            <mat-label>Acceptable Valued</mat-label>
-            <mat-chip-list #chipList aria-label="Acceptable Values" [required]="d.representation == 'enum'"
-              [disabled]="d.representation != 'enum'">
-              <mat-chip *ngFor="let value of d.acceptableValues" [selectable]="selectable" [removable]="removable"
-                (removed)="removeChips(i,value)">
-                {{value}}
-                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-              </mat-chip>
-              <input placeholder="New value..." [matChipInputFor]="chipList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                (matChipInputTokenEnd)="addChips(i,$event)">
-            </mat-chip-list>
-          </mat-form-field>
-          <mat-form-field class="form-field">
-            <mat-label>Description</mat-label>
-            <textarea matInput rows="4" name="queryDescription_{{i}}" [(ngModel)]="d.description"
-              style="display: none;"></textarea>
-            <ckeditor matInput [type]="type" name="queryDescription_{{i}}" [(ngModel)]="d.description"></ckeditor>
-          </mat-form-field>
-          <div class="text-right removeLink">
-            <i class="text-danger" (click)="removeQueryParams(i)" style="cursor: pointer;">Delete</i>
-          </div>
-          <mat-divider></mat-divider>
-        </div>
-      </fieldset>
-      <ng-template #paramFieldset>
-        <fieldset>
-          <legend [hidden]="!!!form.params?.length">Params </legend>
-          <div *ngFor="let d of form.params;let i = index;" class="paramContainer">
+        <fieldset *ngIf="showFieldSet=='queryParams';else paramFieldset">
+          <legend [hidden]="!!!form.queryParams?.length">Query Params </legend>
+          <div *ngFor="let d of form.queryParams;let i = index;" class="paramContainer">
             <div style="display: flex;">
-              <mat-form-field style="width: 100px;">
-                <mat-label>Type</mat-label>
-                <mat-select matInput name="paramType{{i}}" [(ngModel)]="d.type" required>
-                  <mat-option *ngFor="let method of ['Required','Optional']" [value]="method">
-                    {{method | titlecase}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
               <mat-form-field class="form-field">
                 <mat-label>Param</mat-label>
-                <input matInput type="text" name="params_{{i}}" [(ngModel)]="d.param" required>
+                <input matInput type="text" name="queryParams_{{i}}" [(ngModel)]="d.param" required>
                 <button mat-button matSuffix mat-icon-button aria-label="Clear" class="icon" *ngIf="d.param"
                   (click)="d.param = null">
                   <mat-icon>close</mat-icon>
@@ -97,7 +50,7 @@
               </mat-form-field>
               <mat-form-field style="width: 150px;">
                 <mat-label>Representation</mat-label>
-                <mat-select matInput name="paramRepresentation{{i}}" [(ngModel)]="d.representation">
+                <mat-select matInput name="queryRepresentation{{i}}" [(ngModel)]="d.representation" required>
                   <mat-option *ngFor="let method of representationTypes" [value]="method">
                     {{method | titlecase}}
                   </mat-option>
@@ -113,30 +66,96 @@
                   {{value}}
                   <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                 </mat-chip>
-                <input placeholder="New value..." [matChipInputFor]="chipList" required
+                <input placeholder="New value..." [matChipInputFor]="chipList"
                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
                   (matChipInputTokenEnd)="addChips(i,$event)">
               </mat-chip-list>
             </mat-form-field>
             <mat-form-field class="form-field">
               <mat-label>Description</mat-label>
-              <textarea matInput rows="4" name="paramsDescription_{{i}}" [(ngModel)]="d.description"
+              <textarea matInput rows="4" name="queryDescription_{{i}}" [(ngModel)]="d.description"
                 style="display: none;"></textarea>
-              <ckeditor matInput [type]="type" name="paramsDescription_{{i}}" [(ngModel)]="d.description"></ckeditor>
+              <ckeditor matInput [type]="type" name="queryDescription_{{i}}" [(ngModel)]="d.description"></ckeditor>
             </mat-form-field>
             <div class="text-right removeLink">
-              <i class="text-danger" (click)="removeParams(i)" style="cursor: pointer;">Delete</i>
+              <i class="text-danger" (click)="removeQueryParams(i)" style="cursor: pointer;">Delete</i>
             </div>
             <mat-divider></mat-divider>
           </div>
         </fieldset>
-      </ng-template>
-    </ng-container>
-    <div style="padding: 8px;justify-content: space-between;display: flex;">
+        <ng-template #paramFieldset>
+          <fieldset>
+            <legend [hidden]="!!!form.params?.length">Params </legend>
+            <div *ngFor="let d of form.params;let i = index;" class="paramContainer">
+              <div style="display: flex;">
+                <mat-form-field style="width: 100px;">
+                  <mat-label>Type</mat-label>
+                  <mat-select matInput name="paramType{{i}}" [(ngModel)]="d.type" required>
+                    <mat-option *ngFor="let method of ['Required','Optional']" [value]="method">
+                      {{method | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="form-field">
+                  <mat-label>Param</mat-label>
+                  <input matInput type="text" name="params_{{i}}" [(ngModel)]="d.param" required>
+                  <button mat-button matSuffix mat-icon-button aria-label="Clear" class="icon" *ngIf="d.param"
+                    (click)="d.param = null">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+                <mat-form-field style="width: 150px;">
+                  <mat-label>Representation</mat-label>
+                  <mat-select matInput name="paramRepresentation{{i}}" [(ngModel)]="d.representation">
+                    <mat-option *ngFor="let method of representationTypes" [value]="method">
+                      {{method | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <mat-form-field class="form-field" [hidden]="d.representation != 'enum'">
+                <mat-label>Acceptable Valued</mat-label>
+                <mat-chip-list #chipList aria-label="Acceptable Values" [required]="d.representation == 'enum'"
+                  [disabled]="d.representation != 'enum'">
+                  <mat-chip *ngFor="let value of d.acceptableValues" [selectable]="selectable" [removable]="removable"
+                    (removed)="removeChips(i,value)">
+                    {{value}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  </mat-chip>
+                  <input placeholder="New value..." [matChipInputFor]="chipList" required
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="addChips(i,$event)">
+                </mat-chip-list>
+              </mat-form-field>
+              <mat-form-field class="form-field">
+                <mat-label>Description</mat-label>
+                <textarea matInput rows="4" name="paramsDescription_{{i}}" [(ngModel)]="d.description"
+                  style="display: none;"></textarea>
+                <ckeditor matInput [type]="type" name="paramsDescription_{{i}}" [(ngModel)]="d.description"></ckeditor>
+              </mat-form-field>
+              <div class="text-right removeLink">
+                <i class="text-danger" (click)="removeParams(i)" style="cursor: pointer;">Delete</i>
+              </div>
+              <mat-divider></mat-divider>
+            </div>
+          </fieldset>
+        </ng-template>
+      </ng-container>
+      <!-- <div style="padding: 8px;justify-content: space-between;display: flex;">
+        <button *ngIf="showFieldSet=='queryParams'" color="accent" mat-raised-button (click)="addQueryParams()"> Add
+          Query Params </button>
+        <button mat-raised-button color="accent" *ngIf="showFieldSet=='params'" (click)="addParams()">Add
+          Params</button>
+        <button mat-raised-button color="primary" type="submit">Save Api</button>
+      </div> -->
+    </mat-card-content>
+    <mat-card-actions>
       <button *ngIf="showFieldSet=='queryParams'" color="accent" mat-raised-button (click)="addQueryParams()"> Add
         Query Params </button>
-      <button mat-raised-button color="accent" *ngIf="showFieldSet=='params'" (click)="addParams()">Add Params</button>
+      <button mat-raised-button color="accent" *ngIf="showFieldSet=='params'" (click)="addParams()">Add
+        Params</button>
       <button mat-raised-button color="primary" type="submit">Save Api</button>
-    </div>
-  </form>
-</div>
+    </mat-card-actions>
+  </mat-card>
+
+</form>

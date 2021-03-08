@@ -6,6 +6,8 @@ import { HomeRoutingModule } from './home-routing.module';
 import { MatTreeModule } from '@angular/material/tree';
 import { CommonsModule } from '@app/commons/commons.module';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -17,7 +19,9 @@ import { HttpClientModule } from '@angular/common/http';
     MatTreeModule,
     MatIconModule,
     CommonsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatMenuModule,
+    MatDividerModule
   ]
 })
 export class HomeModule { }

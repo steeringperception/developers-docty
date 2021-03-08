@@ -5,8 +5,10 @@ import { HttpService } from '@services/http.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { CKEditor4 } from 'ckeditor4-angular';
+import { decrypt, encrypt } from '@app/commons/helper';
 
 import { data } from '../../../json/static';
+import Swal from 'sweetalert2';
 
 interface queryParams {
   description: string | null;
@@ -70,7 +72,8 @@ export class DocumentorFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.params.subscribe(res => {
+    this.route.params.subscribe((res: any) => {
+      this.form.folderId = decrypt(res.folderId) || 2;
       if (res.apiId)
         this.getData(res.apiId)
     })
@@ -120,8 +123,8 @@ export class DocumentorFormComponent implements OnInit {
   submitForm(form: NgForm) {
     if ((form.form.status || '').toLocaleLowerCase() == 'valid') {
       this.http.post(`documentor/api-doc`, this.form).toPromise().then((res: any) => {
-        if (!!!this.form.apiId && res.appId) {
-          this.router.navigate(['/', 'docs', res.appId]);
+        if (!!!this.form.apiId && res.apiId) {
+          this.router.navigate(['/', encrypt(res.folderId), res.apiId]);
         } else {
           this.form = res;
         }
@@ -148,5 +151,19 @@ export class DocumentorFormComponent implements OnInit {
       this.form.params[index].acceptableValues = this.form.params[index].acceptableValues.filter(r => r != value);
     else
       this.form.queryParams[index].acceptableValues = this.form.queryParams[index].acceptableValues.filter(r => r != value);
+  }
+
+  deleteApi() {
+    Swal.fire({
+      title: `Are you sure want to delete api end-ponit ${this.form.method}/ ${this.form.path}`,
+      icon: 'warning',
+      showCancelButton: true,
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        await this.http.delete(`documentor/api-doc/${this.form.apiId}`).toPromise().then(res => {
+          this.router.navigate(['/', encrypt(this.form.folderId)]);
+        })
+      }
+    })
   }
 }

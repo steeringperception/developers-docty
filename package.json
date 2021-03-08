@@ -24,6 +24,7 @@
     "bootstrap-css-only": "^4.4.1",
     "ckeditor4-angular": "^2.1.0",
     "rxjs": "~6.6.0",
+    "sweetalert2": "^10.15.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
