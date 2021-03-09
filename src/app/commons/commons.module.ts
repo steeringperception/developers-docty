@@ -13,10 +13,14 @@ import { MatDividerModule } from '@angular/material/divider';
 import { HttpClientModule } from '@angular/common/http';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CKEditorModule } from 'ckeditor4-angular';
-
+import { ApiViewerComponent } from './api-viewer/api-viewer.component';
+import { NgxJsonViewerModule } from "ngx-json-viewer";
+import { ClipboardModule } from '@angular/cdk/clipboard';
 @NgModule({
-  declarations: [DocumentorFormComponent],
+  declarations: [DocumentorFormComponent, ApiViewerComponent],
   imports: [
     CommonModule,
     MatTreeModule,
@@ -31,11 +35,15 @@ import { CKEditorModule } from 'ckeditor4-angular';
     HttpClientModule,
     MatChipsModule,
     CKEditorModule,
-    MatCardModule
+    MatCardModule,
+    MatTabsModule,
+    MatProgressSpinnerModule,
+    NgxJsonViewerModule,
+    ClipboardModule
   ],
   providers: [
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
   ],
-  exports: [DocumentorFormComponent]
+  exports: [DocumentorFormComponent, ApiViewerComponent]
 })
 export class CommonsModule { }

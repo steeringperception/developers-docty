@@ -1,10 +1,16 @@
 <form class="box_" (ngSubmit)="submitForm(f)" #f="ngForm">
   <mat-card>
     <mat-card-header style="justify-content: space-between;">
-      <mat-card-title>{{form.method | uppercase}}</mat-card-title>
-      <mat-card-subtitle>/{{form.path || 'unknown'}} </mat-card-subtitle>
+      <mat-card-title>{{form.method | uppercase}} /{{form.path }}</mat-card-title>
+      <mat-card-subtitle style="display: inline-flex;">
+        <!-- {{form.folderId}}
+        <mat-icon class="dropdownIcon"> arrow_drop_down </mat-icon> -->
+        <select name="folderId" [(ngModel)]="form.folderId" style="border: none;">
+          <option [value]="op.id" *ngFor="let op of io.treeData | async">{{op.title}}</option>
+        </select>
+      </mat-card-subtitle>
       <div *ngIf="!!form.apiId">
-        <button mat-button class="text-info">Preview</button>
+        <button mat-button class="text-info" (click)="preview()">Preview</button>
         <button mat-button (click)="deleteApi()" class="text-danger">Delete</button>
       </div>
     </mat-card-header>

@@ -9,6 +9,7 @@ import { decrypt, encrypt } from '@app/commons/helper';
 
 import { data } from '../../../json/static';
 import Swal from 'sweetalert2';
+import { InterOperabilityService } from '@services/inter-operability.service';
 
 interface queryParams {
   description: string | null;
@@ -63,17 +64,20 @@ export class DocumentorFormComponent implements OnInit {
   selectable = true;
   removable = true;
   addOnBlur = true;
+  oldFolder: any = null;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(
     private http: HttpService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public io: InterOperabilityService
   ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((res: any) => {
       this.form.folderId = decrypt(res.folderId) || 2;
+      this.oldFolder = this.form.folderId;
       if (res.apiId)
         this.getData(res.apiId)
     })
@@ -90,6 +94,7 @@ export class DocumentorFormComponent implements OnInit {
   getData(apiId: string) {
     this.http.get(`docs/get-collection/${apiId}`).toPromise().then((res: any) => {
       this.form = res;
+      this.oldFolder = res.folderId;
       this.onMethodChange();
     })
   }
@@ -125,8 +130,12 @@ export class DocumentorFormComponent implements OnInit {
       this.http.post(`documentor/api-doc`, this.form).toPromise().then((res: any) => {
         if (!!!this.form.apiId && res.apiId) {
           this.router.navigate(['/', encrypt(res.folderId), res.apiId]);
+          this.io.loadTree.emit(true);
         } else {
           this.form = res;
+          if (this.oldFolder != res.folderId) {
+            this.io.loadTree.emit(true);
+          }
         }
       })
     }
@@ -161,9 +170,14 @@ export class DocumentorFormComponent implements OnInit {
       showLoaderOnConfirm: true,
       preConfirm: async () => {
         await this.http.delete(`documentor/api-doc/${this.form.apiId}`).toPromise().then(res => {
+          this.io.loadTree.emit(true);
           this.router.navigate(['/', encrypt(this.form.folderId)]);
         })
       }
     })
+  }
+
+  preview() {
+    this.router.navigate(['/', 'preview', this.form.apiId]);
   }
 }

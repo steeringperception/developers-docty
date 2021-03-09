@@ -16,7 +16,7 @@
         </li>
       </ul>
       <mat-divider></mat-divider>
-      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
+      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree" #tree>
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
           <li class="mat-tree-node">
             <button mat-icon-button disabled class="icon"></button>
@@ -34,7 +34,7 @@
                 </mat-icon>
               </button>
               {{node.title}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <span>
+              <span style="position: absolute; right: 0;">
                 <!-- <mat-icon class="icon add" > add
                 </mat-icon> -->
                 <button mat-button class="icon add" [matMenuTriggerFor]="menu">

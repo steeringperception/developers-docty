@@ -19,7 +19,7 @@ export class HttpService {
     if (url.includes("http")) {
       return url + query.join('&');
     } else {
-      return environment.apiBaseUrl + url + query.join('&')
+      return environment.docApiBaseUrl + url + query.join('&')
     }
   }
 
