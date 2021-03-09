@@ -61,8 +61,9 @@
                 <td>{{apidoc?.type | titlecase}}</td>
                 <td>
                   <div [innerHtml]="apidoc?.description"></div>
-                  <b>Acceptable values : </b> <code>first_name</code>,
-                  <code>last_name</code>, <code>gender</code>
+                  <ng-container *ngIf="!!apidoc?.acceptableValues && !!apidoc?.acceptableValues?.length">
+                    <b>Acceptable values : </b> <code>{{apidoc?.acceptableValues}}</code>
+                  </ng-container>
                 </td>
                 <td>
                   <input [type]="apidoc.representation" class="form-control" [name]="'param'+apidoc.param+i"
@@ -70,7 +71,7 @@
                   <select [name]="'param'+apidoc.param+i" class="form-control" [(ngModel)]="params[apidoc.param]"
                     *ngIf="apidoc.representation == 'enum'">
                     <option value="">--</option>
-                    <option value="">Value 1</option>
+                    <option [value]="v" *ngFor="let v of apidoc?.acceptableValues">{{v}}</option>
                   </select>
                 </td>
               </tr>
@@ -101,15 +102,17 @@
                 <!-- <td>{{apidoc?.type | titlecase}}</td> -->
                 <td>
                   <div [innerHtml]="apidoc?.description"></div>
-                  <b>Acceptable values : </b> <code>first_name</code>,
-                  <code>last_name</code>, <code>gender</code>
+                  <ng-container *ngIf="!!apidoc?.acceptableValues && !!apidoc?.acceptableValues?.length">
+                    <b>Acceptable values : </b> <code>{{apidoc?.acceptableValues}}</code>
+                  </ng-container>
                 </td>
                 <td>
                   <input [type]="apidoc.representation" class="form-control" [name]="'queryParams'+apidoc.param+i"
                     *ngIf="apidoc?.representation != 'enum'" [(ngModel)]="queryParams[apidoc.param]" />
                   <select [name]="'queryParams'+apidoc.param+i" class="form-control"
                     [(ngModel)]="queryParams[apidoc.param]" *ngIf="apidoc?.representation == 'enum'">
-                    <option value=""></option>
+                    <option value="">--</option>
+                    <option [value]="v" *ngFor="let v of apidoc?.acceptableValues">{{v}}</option>
                   </select>
                 </td>
               </tr>

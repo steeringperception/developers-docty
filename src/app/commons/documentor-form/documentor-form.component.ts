@@ -146,10 +146,14 @@ export class DocumentorFormComponent implements OnInit {
     const input = event.input;
     const value = event.value;
     if ((value || '').trim()) {
-      if (this.showFieldSet == 'params')
+      if (this.showFieldSet == 'params') {
+        this.form.params[index].acceptableValues = this.form.params[index].acceptableValues || [];
         this.form.params[index].acceptableValues.push(value.trim());
-      else
+      }
+      else {
+        this.form.queryParams[index].acceptableValues = this.form.queryParams[index].acceptableValues || [];
         this.form.queryParams[index].acceptableValues.push(value.trim());
+      }
     }
     if (input) {
       input.value = '';
