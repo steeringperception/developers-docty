@@ -1,0 +1,17 @@
+<form class="box_" #f="ngForm">
+  <mat-card>
+    <mat-card-header style="justify-content: space-between;">
+      <mat-card-title>{{page.pageName | titlecase}}</mat-card-title>
+      <mat-card-subtitle style="display: inline-flex;">
+
+      </mat-card-subtitle>
+      <button mat-button class="text-info" [routerLink]="['/documentor/prologue/preview']">Preview</button>
+    </mat-card-header>
+    <mat-card-content>
+      <ckeditor matInput name="content" [(ngModel)]="page.content"></ckeditor>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button (click)="submitForm(f)" color="primary" type="submit">Save Prologue</button>
+    </mat-card-actions>
+  </mat-card>
+</form>

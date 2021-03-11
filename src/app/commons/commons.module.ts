@@ -19,8 +19,11 @@ import { CKEditorModule } from 'ckeditor4-angular';
 import { ApiViewerComponent } from './api-viewer/api-viewer.component';
 import { NgxJsonViewerModule } from "ngx-json-viewer";
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { DocsComponent } from './docs/docs.component';
+import { DocsViewerComponent } from './docs-viewer/docs-viewer.component';
+import { RouterModule } from '@angular/router';
 @NgModule({
-  declarations: [DocumentorFormComponent, ApiViewerComponent],
+  declarations: [DocumentorFormComponent, ApiViewerComponent, DocsComponent, DocsViewerComponent],
   imports: [
     CommonModule,
     MatTreeModule,
@@ -39,6 +42,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     MatTabsModule,
     MatProgressSpinnerModule,
     NgxJsonViewerModule,
+    RouterModule,
     ClipboardModule
   ],
   providers: [

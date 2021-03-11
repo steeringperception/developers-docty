@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
-  docApiBaseUrl: 'http://localhost:3000/',
-  apiBaseUrl: 'https://apicotest.docty.ai/api/',
+  // docApiBaseUrl: 'http://api.docty.ai:3008/',
+  docApiBaseUrl: 'http://127.0.0.1:3008/',
+  apiBaseUrl: 'https://apicotest.docty.ai/api/'
 };

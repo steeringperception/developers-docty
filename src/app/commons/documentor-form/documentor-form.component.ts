@@ -129,7 +129,7 @@ export class DocumentorFormComponent implements OnInit {
     if ((form.form.status || '').toLocaleLowerCase() == 'valid') {
       this.http.post(`documentor/api-doc`, this.form).toPromise().then((res: any) => {
         if (!!!this.form.apiId && res.apiId) {
-          this.router.navigate(['/', encrypt(res.folderId), res.apiId]);
+          this.router.navigate(['/documentor', encrypt(res.folderId), res.apiId]);
           this.io.loadTree.emit(true);
         } else {
           this.form = res;
@@ -175,13 +175,13 @@ export class DocumentorFormComponent implements OnInit {
       preConfirm: async () => {
         await this.http.delete(`documentor/api-doc/${this.form.apiId}`).toPromise().then(res => {
           this.io.loadTree.emit(true);
-          this.router.navigate(['/', encrypt(this.form.folderId)]);
+          this.router.navigate(['/documentor', encrypt(this.form.folderId)]);
         })
       }
     })
   }
 
   preview() {
-    this.router.navigate(['/', 'preview', this.form.apiId]);
+    this.router.navigate(['/documentor', 'preview', this.form.apiId]);
   }
 }
