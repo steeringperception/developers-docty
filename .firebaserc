@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "developers-docty": {
+      "hosting": {
+        "developers": [
+          "developers-docty"
+        ]
+      }
+    }
+  }
+}
