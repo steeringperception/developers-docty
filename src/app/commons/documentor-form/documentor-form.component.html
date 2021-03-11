@@ -97,7 +97,7 @@
                 <mat-form-field style="width: 100px;">
                   <mat-label>Type</mat-label>
                   <mat-select matInput name="paramType{{i}}" [(ngModel)]="d.type" required>
-                    <mat-option *ngFor="let method of ['Required','Optional']" [value]="method">
+                    <mat-option *ngFor="let method of ['required','optional']" [value]="method">
                       {{method | titlecase}}
                     </mat-option>
                   </mat-select>

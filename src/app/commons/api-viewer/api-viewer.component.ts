@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HttpService } from '@services/http.service';
 import { Observable, Subscription } from 'rxjs';
@@ -13,13 +14,15 @@ import { environment } from 'src/environments/environment';
 export class ApiViewerComponent implements OnInit {
   params: any = {};
   queryParams: any = {};
+  routeParams: any[] = [];
   apiDoc: any = {};
   subscription: Subscription = new Subscription();
-  token: string = '710a1bdd358c1a9700c537ad523bfb646255ac02';
+  token: string = null;
   error: any = null;
   result: any = null;
   loader: boolean = false;
   apiBase: string = environment.apiBaseUrl;
+  cUrl = this.apiBase;
   constructor(
     private http: HttpService,
     private route: ActivatedRoute
@@ -33,23 +36,48 @@ export class ApiViewerComponent implements OnInit {
         })
       ).subscribe(res => {
         this.apiDoc = res || {};
-        // map
+        this.getRouteParams();
       })
     )
+    if (!!!this.token) {
+      this.token = localStorage.getItem('token');
+    }
   }
 
+  getRouteParams() {
+    this.cUrl = this.apiBase + this.apiDoc.path;
+    let arr = this.apiDoc.path.split('{');
+    arr.forEach(element => {
+      if (element.includes('}')) {
+        let e = element.replace(/\}.*/, '');
+        this.routeParams.push({ param: e });
+      }
+    });
+  }
 
+  mapUrl() {
+    this.cUrl = this.apiBase + this.apiDoc.path;
+    this.routeParams.forEach(obj => {
+      if (!!obj.value) {
+        let key = `{${obj.param}}`;
+        this.cUrl = this.cUrl.replace(key, obj.value);
+      }
+    })
+  }
 
-  evaluate() {
+  evaluate(f: NgForm) {
+    if (f.form.status == 'INVALID') {
+      f.form.markAllAsTouched();
+      return;
+    }
     this.loader = true;
     this.result = null;
     this.error = null;
-    let url = this.apiBase + this.apiDoc.path;
     let inst: Observable<any>;
     if (this.apiDoc.method == 'get' || this.apiDoc.method == 'get') {
-      inst = this.flatCall(url);
+      inst = this.flatCall(this.cUrl);
     } else {
-      inst = this.payloadCall(url);
+      inst = this.payloadCall(this.cUrl);
     }
     inst.toPromise()
       .then(res => {
@@ -83,6 +111,10 @@ export class ApiViewerComponent implements OnInit {
         break;
     }
     return inst;
+  }
+
+  saveToken() {
+    localStorage.setItem('token', this.token);
   }
 
 }

@@ -1,4 +1,4 @@
-<div class="api-content">
+<form class="api-content" (ngSubmit)="evaluate(f)" #f="ngForm">
   <div class="row">
     <div class="col-md-12">
       <nav aria-label="breadcrumb">
@@ -9,33 +9,32 @@
         </ol>
       </nav>
     </div>
-    <form class="col-md-12">
+    <div class="col-md-12">
       <div class="input-group">
         <div class="input-group-prepend">
           <span class="input-group-text">{{apiDoc?.method | uppercase}}</span>
         </div>
-        <input type="text" class="form-control" [value]="apiBase+apiDoc?.path" readonly placeholder="" />
+        <input type="text" class="form-control" [value]="cUrl" readonly placeholder="" />
         <div class="input-group-append">
-          <span class="input-group-text"><a [cdkCopyToClipboard]="apiBase+apiDoc?.path"
-              href="javascipt:void()">Copy</a></span>
+          <span class="input-group-text"><a [cdkCopyToClipboard]="cUrl" href="javascipt:void()">Copy</a></span>
         </div>
       </div>
-    </form>
+    </div>
   </div>
   <div class="row">
     <main role="main" class="col-md-12">
-      <h3>Authenication</h3>
+      <h3>Authenication Header</h3>
       <mat-card>
         <table class="table text-start table-bordered">
           <tbody>
             <tr style="line-height: 36px;">
-              <td><code>Token</code></td>
+              <td><code>auth_token</code></td>
               <td>Required</td>
               <td>
                 An authentication token required for data view
               </td>
               <td>
-                <input type="text" name="token" class="form-control" [(ngModel)]="token" />
+                <input type="text" name="token" class="form-control" [(ngModel)]="token" (change)="saveToken()" />
               </td>
             </tr>
           </tbody>
@@ -43,6 +42,49 @@
 
         <br clear="both" />
       </mat-card>
+      <ng-container *ngIf="!!routeParams && !!routeParams?.length">
+        <h3>Route Params</h3>
+        <mat-card>
+          <table class="table text-start table-bordered">
+            <thead>
+              <tr>
+                <th>Params</th>
+                <th>Type</th>
+                <!-- <th>Description</th> -->
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let params of routeParams;let i = index;">
+                <td><code>{{params?.param}}</code></td>
+                <td>Required</td>
+                <!-- <td>
+                    <div [innerHtml]="apidoc?.description"></div>
+                    <ng-container *ngIf="!!apidoc?.acceptableValues && !!apidoc?.acceptableValues?.length">
+                      <b>Acceptable values : </b> <code>{{apidoc?.acceptableValues}}</code>
+                    </ng-container>
+                  </td> -->
+                <td>
+                  <input type="text" class="form-control" [name]="'routeParams'+params.param+i"
+                    [(ngModel)]="params.value" (change)="mapUrl()" required />
+
+
+                  <!-- <mat-form-field class="form-field">
+                    <mat-label>End Point</mat-label>
+                    <input matInput type="text" [name]="'routeParams'+params.param+i" [(ngModel)]="params.value"
+                      required>
+                    <button mat-button matSuffix mat-icon-button aria-label="Clear" class="icon" *ngIf="!!params.value"
+                      (click)="params.value = null">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field> -->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <br clear="both" />
+        </mat-card>
+      </ng-container>
       <ng-container *ngIf="!!apiDoc?.params && !!apiDoc?.params?.length">
         <h3>Parameters</h3>
         <mat-card>
@@ -56,34 +98,32 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let apidoc of apiDoc?.params;let i = index;">
-                <td><code>{{apidoc?.param}}</code></td>
-                <td>{{apidoc?.type | titlecase}}</td>
+              <tr *ngFor="let params of apiDoc?.params;let i = index;">
+                <td><code>{{params?.param}}</code></td>
+                <td>{{params?.type | titlecase}}</td>
                 <td>
-                  <div [innerHtml]="apidoc?.description"></div>
-                  <ng-container *ngIf="!!apidoc?.acceptableValues && !!apidoc?.acceptableValues?.length">
-                    <b>Acceptable values : </b> <code>{{apidoc?.acceptableValues}}</code>
+                  <div [innerHtml]="params?.description"></div>
+                  <ng-container *ngIf="!!params?.acceptableValues && !!params?.acceptableValues?.length">
+                    <b>Acceptable values : </b> <code>{{params?.acceptableValues}}</code>
                   </ng-container>
                 </td>
                 <td>
-                  <input [type]="apidoc.representation" class="form-control" [name]="'param'+apidoc.param+i"
-                    *ngIf="apidoc.representation != 'enum'" [(ngModel)]="params[apidoc.param]" />
-                  <select [name]="'param'+apidoc.param+i" class="form-control" [(ngModel)]="params[apidoc.param]"
-                    *ngIf="apidoc.representation == 'enum'">
+                  <input [type]="params.representation" class="form-control" [name]="'param'+params.param+i"
+                    *ngIf="params.representation != 'enum'" [(ngModel)]="params[params.param]"
+                    [required]="params?.type == 'required'" />
+                  <select [name]="'param'+params.param+i" class="form-control" [(ngModel)]="params[params.param]"
+                    [required]="params?.type == 'required'" *ngIf="params.representation == 'enum'">
                     <option value="">--</option>
-                    <option [value]="v" *ngFor="let v of apidoc?.acceptableValues">{{v}}</option>
+                    <option [value]="v" *ngFor="let v of params?.acceptableValues">{{v}}</option>
                   </select>
                 </td>
               </tr>
             </tbody>
           </table>
-          <button class="btn btn-primary pull-right" (click)="evaluate()" style="display:flex;">
-            Get Response &emsp;
-            <mat-spinner diameter="16" color="warn" *ngIf="loader"></mat-spinner>
-          </button>
-          <br clear="both" />
         </mat-card>
       </ng-container>
+      <br clear="both" />
+
       <ng-container *ngIf="!!apiDoc?.queryParams && !!apiDoc?.queryParams?.length">
         <h3>Parameters</h3>
         <mat-card>
@@ -97,41 +137,43 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let apidoc of apiDoc?.queryParams;let i = index;">
-                <td><code>{{apidoc?.param}}</code></td>
+              <tr *ngFor="let params of apiDoc?.queryParams;let i = index;">
+                <td><code>{{params?.param}}</code></td>
                 <!-- <td>{{apidoc?.type | titlecase}}</td> -->
                 <td>
-                  <div [innerHtml]="apidoc?.description"></div>
-                  <ng-container *ngIf="!!apidoc?.acceptableValues && !!apidoc?.acceptableValues?.length">
-                    <b>Acceptable values : </b> <code>{{apidoc?.acceptableValues}}</code>
+                  <div [innerHtml]="params?.description"></div>
+                  <ng-container *ngIf="!!params?.acceptableValues && !!params?.acceptableValues?.length">
+                    <b>Acceptable values : </b> <code>{{params?.acceptableValues}}</code>
                   </ng-container>
                 </td>
                 <td>
-                  <input [type]="apidoc.representation" class="form-control" [name]="'queryParams'+apidoc.param+i"
-                    *ngIf="apidoc?.representation != 'enum'" [(ngModel)]="queryParams[apidoc.param]" />
-                  <select [name]="'queryParams'+apidoc.param+i" class="form-control"
-                    [(ngModel)]="queryParams[apidoc.param]" *ngIf="apidoc?.representation == 'enum'">
+                  <input [type]="params.representation" class="form-control" [name]="'queryParams'+params.param+i"
+                    *ngIf="params?.representation != 'enum'" [(ngModel)]="queryParams[params.param]" />
+                  <select [name]="'queryParams'+params.param+i" class="form-control"
+                    [(ngModel)]="queryParams[params.param]" *ngIf="params?.representation == 'enum'">
                     <option value="">--</option>
-                    <option [value]="v" *ngFor="let v of apidoc?.acceptableValues">{{v}}</option>
+                    <option [value]="v" *ngFor="let v of params?.acceptableValues">{{v}}</option>
                   </select>
                 </td>
               </tr>
             </tbody>
           </table>
-          <button class="btn btn-primary pull-right" (click)="evaluate()" style="display:flex;">
-            Get Response &emsp;
-            <mat-spinner diameter="16" color="warn" *ngIf="loader"></mat-spinner>
-          </button>
-          <br clear="both" />
         </mat-card>
       </ng-container>
 
-      <h3>Response Query and Data Results</h3>
-      <mat-card *ngIf="!result && !error" style="text-align:center;padding:30px;">
-        <a class="text-info text-center" (click)="evaluate()" style="display:flex;cursor:pointer;">
+      <div style="width: 100%;text-align: right;">
+        <button mat-raised-button color="primary">
           Get Response &emsp;
           <mat-spinner diameter="16" color="warn" *ngIf="loader"></mat-spinner>
-        </a>
+        </button>
+      </div>
+
+      <h3>Response Query and Data Results</h3>
+      <mat-card *ngIf="!result && !error" style="text-align:center;padding:30px;">
+        <button mat-button>
+          Get Response &emsp;
+          <mat-spinner diameter="16" color="warn" *ngIf="loader"></mat-spinner>
+        </button>
       </mat-card>
       <mat-card *ngIf="result">
         <mat-tab-group>
@@ -198,4 +240,4 @@
       </mat-card>
     </main>
   </div>
-</div>
+</form>
