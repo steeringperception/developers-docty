@@ -31,6 +31,7 @@ interface params {
 interface form {
   method: string | null;
   path: string | null;
+  title: string | null;
   apiId: string | null;
   queryParams: queryParams[];
   params: params[];
@@ -51,6 +52,7 @@ export class DocumentorFormComponent implements OnInit {
   representationTypes: string[] = data.representationTypes;
   form: form = {
     method: 'get',
+    title: '',
     path: null,
     apiId: null,
     queryParams: [],

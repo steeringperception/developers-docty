@@ -18,7 +18,9 @@ export class DocsComponent implements OnInit {
   constructor(
     private http: HttpService,
     private route: ActivatedRoute
-  ) { }
+  ) {
+
+  }
 
   ngOnInit(): void {
     this.subscription.add(
@@ -26,7 +28,8 @@ export class DocsComponent implements OnInit {
         .pipe(
           switchMap(res => {
             this.page = res;
-            this.pageData = res;
+            this.pageData = JSON.parse(JSON.stringify(res));
+            console.log(res)
             return this.http.get(`docs/get-${res.code}`)
           })
         ).subscribe(res => {

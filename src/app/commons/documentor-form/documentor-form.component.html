@@ -1,10 +1,11 @@
 <form class="box_" (ngSubmit)="submitForm(f)" #f="ngForm">
   <mat-card>
     <mat-card-header style="justify-content: space-between;">
-      <mat-card-title>{{form.method | uppercase}} /{{form.path }}</mat-card-title>
+      <mat-card-title>
+        <input matInput type="text" name="title" [(ngModel)]="form.title" placeholder="Title" required
+          style="border-bottom: 1px solid #e0e0e0;color: #a79c9c;">
+      </mat-card-title>
       <mat-card-subtitle style="display: inline-flex;">
-        <!-- {{form.folderId}}
-        <mat-icon class="dropdownIcon"> arrow_drop_down </mat-icon> -->
         <select name="folderId" [(ngModel)]="form.folderId" style="border: none;">
           <option [value]="op.id" *ngFor="let op of io.treeData | async">{{op.title}}</option>
         </select>
