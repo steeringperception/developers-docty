@@ -1,7 +1,51 @@
-<div class="container">
+<div class="container" style="margin-top: 72px;">
   <div class="row">
-    <div class="col-md-3">
-      hjhj
+    <div class="col-md-3 sideBar">
+      <div>
+        <ul class="navList">
+          <li class="mat-tree-node">
+            <a routerLink="/">
+              Prologue
+            </a>
+          </li>
+          <li class="mat-tree-node">
+            <a routerLink="/authentication">
+              Authentication
+            </a>
+          </li>
+          <li class="mat-tree-node">
+            <a>
+              <span>Api v1</span>
+            </a>
+          </li>
+        </ul>
+        <mat-divider></mat-divider>
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree" #tree>
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+            <li class="mat-tree-node">
+              <button mat-icon-button disabled class="icon"></button>
+              <span [routerLink]="['/',node.apiId]" style="cursor: pointer;">
+                {{node.title}}
+              </span>
+            </li>
+          </mat-tree-node>
+          <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+            <li>
+              <div class="mat-tree-node">
+                <button class="icon" mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.title">
+                  <mat-icon>
+                    {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                  </mat-icon>
+                </button>
+                {{node.title}}
+              </div>
+              <ul [class.tree-invisible]="!treeControl.isExpanded(node)">
+                <ng-container matTreeNodeOutlet></ng-container>
+              </ul>
+            </li>
+          </mat-nested-tree-node>
+        </mat-tree>
+      </div>
     </div>
     <div class="col-md-9">
       <router-outlet></router-outlet>

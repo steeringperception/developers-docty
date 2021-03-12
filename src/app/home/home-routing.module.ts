@@ -17,15 +17,15 @@ const routes: Routes = [
         .map(path => ({
           path: path.route,
           component: DocsComponent,
-          data: { pageName: path.route, code: path.code }
+          data: { name: path.route, code: path.code }
         })),
       ...[
         { route: 'prologue', code: 'api_docs_prologue' },
         { route: 'authentication', code: 'api_docs_authentication' }]
         .map(path => ({
-          path: `/preview/${path.route}`,
-          component: DocsComponent,
-          data: { pageName: path.route, code: path.code }
+          path: `${path.route}/preview`,
+          data: { name: path.route, code: path.code },
+          component: DocsViewerComponent
         })),
       // { path: 'prologue/preview', component: DocsViewerComponent },
       { path: 'preview/:apiId', component: ApiViewerComponent },

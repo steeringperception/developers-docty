@@ -9,6 +9,18 @@
         </ol>
       </nav>
     </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Develoers guidelines</h3>
+      <mat-card>
+        <h5>API explained</h5>
+        <div [innerHtml]="apiDoc?.description"></div>
+      </mat-card>
+    </div>
+  </div>
+  <br clear="both">
+  <div class="row">
     <div class="col-md-12">
       <div class="input-group">
         <div class="input-group-prepend">
@@ -98,21 +110,21 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let params of apiDoc?.params;let i = index;">
-                <td><code>{{params?.param}}</code></td>
-                <td>{{params?.type | titlecase}}</td>
+              <tr *ngFor="let paramss of apiDoc?.params;let i = index;">
+                <td><code>{{paramss?.param}}</code></td>
+                <td>{{paramss?.type | titlecase}}</td>
                 <td>
-                  <div [innerHtml]="params?.description"></div>
-                  <ng-container *ngIf="!!params?.acceptableValues && !!params?.acceptableValues?.length">
-                    <b>Acceptable values : </b> <code>{{params?.acceptableValues}}</code>
+                  <div [innerHtml]="paramss?.description"></div>
+                  <ng-container *ngIf="!!paramss?.acceptableValues && !!paramss?.acceptableValues?.length">
+                    <b>Acceptable values : </b> <code>{{paramss?.acceptableValues}}</code>
                   </ng-container>
                 </td>
                 <td>
-                  <input [type]="params.representation" class="form-control" [name]="'param'+params.param+i"
-                    *ngIf="params.representation != 'enum'" [(ngModel)]="params[params.param]"
-                    [required]="params?.type == 'required'" />
-                  <select [name]="'param'+params.param+i" class="form-control" [(ngModel)]="params[params.param]"
-                    [required]="params?.type == 'required'" *ngIf="params.representation == 'enum'">
+                  <input [type]="paramss.representation" class="form-control" [name]="'param'+paramss.param+i"
+                    *ngIf="paramss.representation != 'enum'" [(ngModel)]="params[paramss.param]"
+                    [required]="paramss?.type == 'required'" />
+                  <select [name]="'paramss'+paramss.param+i" class="form-control" [(ngModel)]="params[paramss.param]"
+                    [required]="paramss?.type == 'required'" *ngIf="paramss.representation == 'enum'">
                     <option value="">--</option>
                     <option [value]="v" *ngFor="let v of params?.acceptableValues">{{v}}</option>
                   </select>
@@ -231,12 +243,6 @@
             <pre>{{error | json}}</pre>
           </mat-tab>
         </mat-tab-group>
-      </mat-card>
-
-      <h3>Develoers guidelines</h3>
-      <mat-card>
-        <h5>API explained</h5>
-        <div [innerHtml]="apiDoc?.description"></div>
       </mat-card>
     </main>
   </div>

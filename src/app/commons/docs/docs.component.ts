@@ -12,6 +12,7 @@ import { switchMap } from 'rxjs/operators';
 export class DocsComponent implements OnInit {
 
   page: any = {};
+  pageData: any = {};
   subscription: Subscription = new Subscription();
   loader: boolean = false
   constructor(
@@ -25,9 +26,12 @@ export class DocsComponent implements OnInit {
         .pipe(
           switchMap(res => {
             this.page = res;
+            this.pageData = res;
             return this.http.get(`docs/get-${res.code}`)
           })
         ).subscribe(res => {
+          this.page = Object.assign(this.page, (res || {}));
+          console.log(res);
 
         })
     )

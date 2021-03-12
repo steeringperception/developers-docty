@@ -1,3 +1,6 @@
 .noData {
   line-height: calc(100vh - 256px) !important;
 }
+.content {
+  min-height: calc(100vh - 80px);
+}

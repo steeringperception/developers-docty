@@ -1,0 +1,27 @@
+.tree ul,
+.tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+  outline: none;
+}
+mat-tree {
+  background: transparent;
+}
+span {
+  outline: none;
+}
+.sideBar {
+  border-right: 1px solid #a4a4a4;
+}
+
+.navList {
+  padding: 0;
+  margin: auto;
+
+  a {
+    width: 100%;
+    text-decoration: none;
+    color: unset;
+  }
+}

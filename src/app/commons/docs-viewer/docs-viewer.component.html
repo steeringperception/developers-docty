@@ -1,4 +1,8 @@
-<div [innerHtml]="prologue?.content" *ngIf="!!prologue?.content;else jmb;"></div>
+<ng-container *ngIf="!!page?.content;else jmb;">
+  <mat-card class="content">
+    <div [innerHtml]="page?.content" class="container-fluid"></div>
+  </mat-card>
+</ng-container>
 <ng-template #jmb>
   <div class="jumbotron">
     <h1 class="text-center noData">No Data</h1>
