@@ -19,7 +19,7 @@ export class SetupComponent implements OnInit {
     let sub = this.route.queryParams.subscribe(res => {
       if (!!res.token) {
         localStorage.setItem('authToken', res.token);
-        this.router.navigate(['/', 'documentor']);
+        this.router.navigate(['/', 'documentor', 'prologue']);
       } else {
         this.router.navigate(['/']);
       }
