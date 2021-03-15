@@ -4,11 +4,14 @@ import { ApiViewerComponent } from '@app/commons/api-viewer/api-viewer.component
 import { DocsViewerComponent } from '@app/commons/docs-viewer/docs-viewer.component';
 import { DocsComponent } from '@app/commons/docs/docs.component';
 import { DocumentorFormComponent } from '@app/commons/documentor-form/documentor-form.component';
+import { AuthGuard } from '@app/services/auth.guard';
 import { HomeComponent } from './home.component';
 
 const routes: Routes = [
   {
     path: '', component: HomeComponent,
+    canActivateChild: [AuthGuard],
+    canActivate: [AuthGuard],
     children: [
       // { path: 'prologue', component: DocsComponent },
       ...[

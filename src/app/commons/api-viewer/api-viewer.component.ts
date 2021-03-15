@@ -40,7 +40,7 @@ export class ApiViewerComponent implements OnInit {
       })
     )
     if (!!!this.token) {
-      this.token = localStorage.getItem('token');
+      this.token = localStorage.getItem('apiKey');
     }
   }
 
@@ -114,7 +114,7 @@ export class ApiViewerComponent implements OnInit {
   }
 
   saveToken() {
-    localStorage.setItem('token', this.token);
+    localStorage.setItem('apiKey', this.token);
   }
 
 }

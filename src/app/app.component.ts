@@ -14,7 +14,7 @@ export class AppComponent {
   ) {
     route.queryParams.subscribe(res => {
       if (!!res.apiKey) {
-        localStorage.setItem('token', res.apiKey);
+        localStorage.setItem('apiKey', res.apiKey);
       }
     })
   }

@@ -48,3 +48,9 @@ span {
   cursor: pointer;
   outline: none;
 }
+
+::ng-deep {
+  .mat-drawer-inner-container {
+    height: unset !important;
+  }
+}
