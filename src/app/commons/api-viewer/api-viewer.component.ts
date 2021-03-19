@@ -88,9 +88,9 @@ export class ApiViewerComponent implements OnInit {
   }
 
   flatCall(url: string) {
-    let inst: Observable<any> = this.http.get(url, this.queryParams, { auth_token: this.token });
+    let inst: Observable<any> = this.http.get(url, this.queryParams, { apikey: this.token });
     if (this.apiDoc.method == 'delete') {
-      inst = this.http.delete(url, { auth_token: this.token });
+      inst = this.http.delete(url, { apikey: this.token });
     }
     return inst;
   }
@@ -98,16 +98,16 @@ export class ApiViewerComponent implements OnInit {
     let inst: Observable<any>;
     switch (this.apiDoc.method) {
       case 'post':
-        inst = this.http.post(url, this.params, { auth_token: this.token });
+        inst = this.http.post(url, this.params, { apikey: this.token });
         break;
       case 'put':
-        inst = this.http.put(url, this.params, { auth_token: this.token });
+        inst = this.http.put(url, this.params, { apikey: this.token });
         break;
       case 'patch':
-        inst = this.http.patch(url, this.params, { auth_token: this.token });
+        inst = this.http.patch(url, this.params, { apikey: this.token });
         break;
       default:
-        inst = this.http.post(url, this.params, { auth_token: this.token });
+        inst = this.http.post(url, this.params, { apikey: this.token });
         break;
     }
     return inst;

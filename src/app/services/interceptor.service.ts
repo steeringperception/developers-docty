@@ -11,7 +11,7 @@ export class InterceptorService implements HttpInterceptor {
   constructor(
     public io: InterOperabilityService) { }
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let tk = request.headers.get('auth_token');
+    let tk = request.headers.get('apikey');
     if (!!!tk) {
       let token = localStorage.getItem('authToken');
       request = request.clone({
