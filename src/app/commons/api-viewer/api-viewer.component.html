@@ -197,39 +197,39 @@
               <pre *ngIf="result">{{result | json}}</pre>
             </div>
           </mat-tab>
-          <mat-tab label="Responce Object">
+          <mat-tab label="Response Object">
             <ngx-json-viewer [json]="result"></ngx-json-viewer>
           </mat-tab>
-          <mat-tab label="Respoce Grid View">
-            <!-- <table class="table table-bordered">
+          <mat-tab label="Response Grid View">
+            <table class="table table-bordered" *ngIf="!!result?.data && !!result?.data?.length">
               <thead>
                 <tr>
-                  <th>First Name</th>
-                  <th>Last Name</th>
+                  <th *ngFor="let h of tableHeader">{{h | titlecase}}</th>
+                  <!-- <th>Last Name</th>
                   <th>Last Login</th>
                   <th>Completed Self-declared records date</th>
                   <th>Chronic Condition</th>
                   <th>365 Schedules</th>
                   <th>Triage</th>
-                  <th>Last Device</th>
+                  <th>Last Device</th> -->
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let data of result?.data">
-                  <td>{{data?.first_name}}</td>
-                  <td>{{data?.last_name}}</td>
+                  <td *ngFor="let h of tableHeader">{{data[h]}}</td>
+                  <!-- <td>{{data?.last_name}}</td>
                   <td>{{data?.lastLogin?.createdAt | date:'dd MMM yyyy hh:mm a'}}</td>
                   <td>{{data?.medical_conditions?.updatedAt | date:'dd MMM yyyy hh:mm a'}}
                   </td>
                   <td>NO</td>
                   <td>{{data?.bookings_in_year}}</td>
                   <td>{{data?.triage_level}}</td>
-                  <td>{{data?.lastLogin?.platform}}</td>
+                  <td>{{data?.lastLogin?.platform}}</td> -->
                 </tr>
               </tbody>
-            </table> -->
-            <div class="jumbotron">
-              <h1 class="text-center">Under Construction</h1>
+            </table>
+            <div class="jumbotron" *ngIf="!!!result?.data || !!!result?.data?.length">
+              <h1 class="text-center">Not Applicable</h1>
             </div>
           </mat-tab>
           <mat-tab label="Error Object" *ngIf="error">

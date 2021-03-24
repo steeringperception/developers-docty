@@ -23,6 +23,7 @@ export class ApiViewerComponent implements OnInit {
   loader: boolean = false;
   apiBase: string = environment.apiBaseUrl;
   cUrl = this.apiBase;
+  tableHeader: any[] = [];
   constructor(
     private http: HttpService,
     private route: ActivatedRoute
@@ -32,6 +33,10 @@ export class ApiViewerComponent implements OnInit {
     this.subscription.add(
       this.route.params.pipe(
         switchMap((re: any) => {
+          this.result = null;
+          this.params = [];
+          this.queryParams = [];
+          this.routeParams = [];
           return this.http.get(`docs/get-collection/${re.apiId}`);
         })
       ).subscribe(res => {
@@ -82,6 +87,9 @@ export class ApiViewerComponent implements OnInit {
     inst.toPromise()
       .then(res => {
         this.result = res;
+        if (!!res.data && !!res.data.length) {
+          this.makeTableData();
+        }
       })
       .catch(e => (this.error = e))
       .finally(() => (this.loader = false));
@@ -111,6 +119,10 @@ export class ApiViewerComponent implements OnInit {
         break;
     }
     return inst;
+  }
+
+  makeTableData() {
+    this.tableHeader = Object.keys(this.result.data[0]);
   }
 
   saveToken() {
